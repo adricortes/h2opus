@@ -12,10 +12,11 @@ ifneq ($(CUDA_DIR),)
   CUDA_INCDIR = $(CUDA_DIR)/include
   # comment out if you are using a version of CUDA < 10.2
   H2OPUS_USE_GPU_VMM = 1
-  CUDA_LIBS = -Wl,-rpath,$(CUDA_DIR)/lib64 -L$(CUDA_DIR)/lib64 -lcuda -lcudart -lcublas -lcusparse -lcurand
+  CUDA_LIBS = -Wl,-rpath,$(CUDA_DIR)/lib64 -L$(CUDA_DIR)/lib64 -lcuda -lcudart -lcublas -lcusparse -lcusolver -lcurand
   NVCC = $(CUDA_DIR)/bin/nvcc
 endif
 # if we don't specify a host compiler here via -ccbin, CXX is used and CXXFLAGS are passed as -Xcompiler flags
+# make sure CXX is a host compiler supported by your CUDA version (e.g. CUDA 12.0 supports up to GCC 12)
 NVCCFLAGS = -m64 -O3 -std=c++14 --expt-relaxed-constexpr
 
 # replace with your compute capability
@@ -30,3 +31,7 @@ MAGMA_LIBS = $(MAGMA_DIR)/lib/libmagma.a
 # we specify include folder and linking line
 KBLAS_INCDIR = $(KBLAS_DIR)/include
 KBLAS_LIBS = $(KBLAS_DIR)/lib/libkblas-gpu.a
+
+# The public KBLAS (https://github.com/ecrc/kblas-gpu) does not provide kblas_potrf.h
+# Use the MAGMA dense Cholesky factorization instead
+H2OPUS_USE_MAGMA_POTRF = 1

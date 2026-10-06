@@ -9,7 +9,7 @@
 #ifdef H2OPUS_USE_GPU
 #include <cublas_v2.h>
 #include <kblas.h>
-#include <magma.h>
+#include <magma_v2.h>
 #include <h2opus/util/gpu_err_check.h>
 #endif
 #include <h2opus/util/h2opusfblaslapack.h>

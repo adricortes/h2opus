@@ -1,8 +1,15 @@
 For NVIDIA-GPU installation:
 ----------------------------
 
-The current release has been tested with CUDA versions from 9.0 to 10.2.
-CUDA version 11 introduces some changes and may not work directly out of the box without some changes.
+The current release has been tested with CUDA versions from 9.0 to 10.2, and with CUDA 12.0
+(GCC 12, MAGMA 2.9.0, KBLAS from the master branch of kblas-gpu).
+Notes for CUDA 12:
+    * CUB and Thrust ship with the CUDA toolkit; no separate download is necessary.
+    * The host compiler must be supported by your CUDA version (e.g. CUDA 12.0 supports up to GCC 12).
+    * The public KBLAS does not provide kblas_potrf; set H2OPUS_USE_MAGMA_POTRF = 1 in make.inc
+      (config/make.inc.gpu already does this).
+    * Compile KBLAS with -fPIC (add it to NVOPTS and COPTS in the KBLAS make.inc), otherwise
+      the shared library libh2opus.so cannot be linked.
 
 1. H2Opus on GPUs has two external dependencies, MAGMA and KBLAS, which should be installed.
     * git clone  https://bitbucket.org/icl/magma.git

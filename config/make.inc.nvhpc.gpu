@@ -23,3 +23,5 @@ MAGMA_INCDIR = $(MAGMA_DIR)/include
 MAGMA_LIBS = $(MAGMA_DIR)/lib/libmagma.a
 KBLAS_INCDIR = $(KBLAS_DIR)/include
 KBLAS_LIBS = $(KBLAS_DIR)/lib/libkblas.a
+# The public KBLAS does not provide kblas_potrf.h: use the MAGMA dense Cholesky
+H2OPUS_USE_MAGMA_POTRF = 1
