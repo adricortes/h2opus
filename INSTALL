@@ -1,8 +1,10 @@
 For NVIDIA-GPU installation:
 ----------------------------
 
-The current release has been tested with CUDA versions from 9.0 to 10.2, and with CUDA 12.0
-(GCC 12, MAGMA 2.9.0, KBLAS from the master branch of kblas-gpu).
+The current release has been tested with CUDA versions from 9.0 to 10.2, and with CUDA 12:
+    * CUDA 12.0, GCC 12, OpenBLAS 0.3.26, sm_89 (RTX 4070)
+    * CUDA 12.8, GCC 13, OpenBLAS 0.3.26, sm_90 (H100)
+Both used MAGMA 2.9.0 and KBLAS from the master branch of kblas-gpu (commit 8af76dc).
 Notes for CUDA 12:
     * CUB and Thrust ship with the CUDA toolkit; no separate download is necessary.
     * The host compiler must be supported by your CUDA version (e.g. CUDA 12.0 supports up to GCC 12).
@@ -10,6 +12,17 @@ Notes for CUDA 12:
       (config/make.inc.gpu already does this).
     * Compile KBLAS with -fPIC (add it to NVOPTS and COPTS in the KBLAS make.inc), otherwise
       the shared library libh2opus.so cannot be linked.
+    * With CUDA >= 12.1, KBLAS does not compile (https://github.com/ecrc/kblas-gpu/issues/27):
+      CUDA declares float2 atomicAdd(float2*, float2) for the host pass and for sm_90+, and the
+      atomicAdd(cuFloatComplex*, cuFloatComplex) of include/kblas_operators.h collides with it.
+      Define the KBLAS version only where CUDA does not provide one:
+        #if !((__CUDACC_VER_MAJOR__ > 12 || (__CUDACC_VER_MAJOR__ == 12 && __CUDACC_VER_MINOR__ >= 1)) && \
+              (!defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 900))
+        ... atomicAdd(cuFloatComplex* address, cuFloatComplex val) ...
+        #endif
+    * OpenBLAS 0.3.20 (e.g. Ubuntu 22.04) gave wrong CPU results on Intel Sapphire Rapids CPUs
+      with its default kernel selection; OpenBLAS 0.3.26 gave correct results. With an older
+      OpenBLAS, setting OPENBLAS_CORETYPE=Haswell also gave correct results.
 
 1. H2Opus on GPUs has two external dependencies, MAGMA and KBLAS, which should be installed.
     * git clone  https://bitbucket.org/icl/magma.git

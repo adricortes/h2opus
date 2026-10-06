@@ -203,7 +203,8 @@ void h2opusCreateHandle(h2opusHandle_t *h2opus_handle)
 
 #ifdef H2OPUS_USE_GPU
     // Initialize cuda and magma (cudaSetDevice must have been called)
-#ifdef H2OPUS_USE_DOUBLE_PRECISION
+    // Shared memory bank size is configurable only on Kepler, which CUDA 12 no longer supports
+#if defined(H2OPUS_USE_DOUBLE_PRECISION) && CUDART_VERSION < 12000
     cudaDeviceSetSharedMemConfig(cudaSharedMemBankSizeEightByte);
 #endif
     magma_init();

@@ -78,7 +78,7 @@ void sortByKey(int *keys, int *values, size_t elements, bool ascending, h2opusCo
     }
 }
 
-struct which_segment : thrust::unary_function<int, int>
+struct which_segment
 {
     int seg_size;
 
@@ -97,7 +97,7 @@ int getSegmentedMaxElements(int *a, size_t elements, size_t seg_size, int *seg_m
                             int hw)
 {
     thrust::counting_iterator<int> c_first(0);
-    thrust::transform_iterator<which_segment, thrust::counting_iterator<int>> t_first(c_first, which_segment(seg_size));
+    thrust::transform_iterator<which_segment, thrust::counting_iterator<int>, int> t_first(c_first, which_segment(seg_size));
 
     thrust::equal_to<int> binary_pred;
     thrust::maximum<int> binary_op;
@@ -120,7 +120,7 @@ int getSegmentedMaxElements(int *a, size_t elements, size_t seg_size, int *seg_m
     }
 }
 
-template <typename T> struct absolute_value : public thrust::unary_function<T, T>
+template <typename T> struct absolute_value
 {
     inline __host__ __device__ T operator()(const T &x) const
     {
@@ -522,7 +522,7 @@ void getRemainingElements(int *a, int v, size_t elements, h2opusComputeStream_t 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Permuting vectors using an index map
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-template <class T, int reverse> struct vector_permutor : public thrust::unary_function<int, int>
+template <class T, int reverse> struct vector_permutor
 {
     int *index_map, n, num_vectors;
     T *original, *permuted;
@@ -614,7 +614,7 @@ void permute_vectors(double *original, double *permuted, int n, int num_vectors,
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Swap two vectors
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-template <class T> struct vector_swapper : public thrust::unary_function<int, int>
+template <class T> struct vector_swapper
 {
     int incx, incy;
     T *x, *y;

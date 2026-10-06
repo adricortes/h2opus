@@ -1,7 +1,7 @@
 # GPU configuration file for NVHPC
 
 # Include specs from CPU only builds
-include make.inc.nvhpc.cpu
+include $(H2OPUS_DIR)/config/make.inc.nvhpc.cpu
 
 # GPU compilation
 H2OPUS_USE_GPU = 1

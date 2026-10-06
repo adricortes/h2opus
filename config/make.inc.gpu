@@ -1,7 +1,7 @@
 # Example configuration for NVIDIA GPU
 
 # include CPU stuff
-include make.inc.cpu
+include $(H2OPUS_DIR)/config/make.inc.cpu
 
 # Define the make variable to activate GPU backend compilation
 H2OPUS_USE_GPU = 1
