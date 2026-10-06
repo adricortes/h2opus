@@ -20,6 +20,9 @@ Notes for CUDA 12:
               (!defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 900))
         ... atomicAdd(cuFloatComplex* address, cuFloatComplex val) ...
         #endif
+      This fix is proposed upstream in https://github.com/ecrc/kblas-gpu/pull/28; until it is
+      merged, you can use the branch fix/cuda12.1-float2-atomicadd of
+      https://github.com/adricortes/kblas-gpu.
     * OpenBLAS 0.3.20 (e.g. Ubuntu 22.04) gave wrong CPU results on Intel Sapphire Rapids CPUs
       with its default kernel selection; OpenBLAS 0.3.26 gave correct results. With an older
       OpenBLAS, setting OPENBLAS_CORETYPE=Haswell also gave correct results.
